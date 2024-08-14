@@ -28,7 +28,8 @@ Output: false
 //T.C = O(N)
 //S.C = O(1)
 
-#include<bits/stdc++.h>
+#include<iostream>
+#include<vector>
 using namespace std;
 bool search(vector<int>& nums, int target) {
         int n = nums.size();
@@ -45,43 +46,45 @@ bool search(vector<int>& nums, int target) {
 //T.C = O(LOGN)
 //S.C = O(1)
 
-//solution is expalined by striver.
+//solution is expalined by CodestorywithMIK.
 
-#include<bits/stdc++.h>
-using namespace std;
+int binarySearch(int start, int end, vector<int>&nums,int target){
+    int low = start, high = end;
 
-bool search(vector<int>& nums, int target) {
-        int n = nums.size();
+    while(low<=high){
+        int mid = low + (high-low)/2;
 
-        int start = 0, end = n-1;
-        while(start<=end){
-            int mid = (start+end)/2;
-
-            if(nums[mid]==target){
-                return true;
-            }
-            //below 3 lines are modified lines from previous code.
-            if(nums[start] == nums[mid] && nums[mid] == nums[end]){
-                start = start+1;
-                end = end -1;
-                continue;
-            }//
-            if(nums[start] <= nums[mid]){
-                if(nums[start]<= target && target < nums[mid]){
-                    end = mid-1;
-                }
-                else{
-                    start = mid + 1;
-                }
-            }
-            else{
-                if(nums[mid]<=target && target <= nums[end]){
-                    start = mid +1;
-                }
-                else{
-                    end = mid-1;
-                }
-            }
+        if(nums[mid] == target){
+            return mid;
+        }else if(nums[mid]>target){
+            high = mid-1;
+        }else{
+            low = mid+1;
         }
-        return false;
+    }
+    return -1;
+}
+int findPivot(vector<int>&nums,int n){
+    int l = 0, r = n-1;
+    while(l<r){
+        int mid = l+(r-l)/2;
+        if(nums[mid]>nums[r]){
+            l = mid+1;
+        }else{
+            r=mid;
+        }
+    }
+    return r;
+}
+
+int search(vector<int>& nums, int target) {
+    int n = nums.size();
+
+    int pivot_idx = findPivot(nums,n);
+    int idx = binarySearch(0,pivot_idx-1,nums,target);
+    if(idx!=-1){
+        return idx;
+    }
+    idx = binarySearch(pivot_idx,n-1,nums,target);
+    return idx;
 }
