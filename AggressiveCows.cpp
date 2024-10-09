@@ -47,7 +47,9 @@ which also is the largest among all possible ways.
 //T.C = O(nlogn) + O(max-min)*O(n) == O(N^2)
 //S.C = O(1)
 
-#include<bits/stdc++.h>
+#include<iostream>
+#include<vector>
+#include<algorithm>
 using namespace std;
 
 
@@ -84,6 +86,40 @@ int solve(int n, int k, vector<int> &stalls) {
 //T.C = O(nlogn)+ O(log[stalls[0]-stalls[n-1]])*O(n)
 //S.C = O(1)
 
-#include<bits/stdc++.h>
+#include<iostream>
+#include<vector>
 using namespace std;
 
+  bool isPossible(vector<int> &stalls, int n, int k, int minAllowedDist){
+        
+        int cows = 1, lastStallPos = stalls[0];
+        for(int i = 1; i<n; i++){
+            if(stalls[i]-lastStallPos >= minAllowedDist){
+                cows++;
+                lastStallPos = stalls[i];
+            }
+            
+            if(k == cows){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    int solve(int n, int k, vector<int> &stalls) {
+    
+        // Write your code here
+        sort(stalls.begin(),stalls.end());
+        int st = 1, end = stalls[n-1]-stalls[0] ,ans = -1;
+        
+        while(st<=end){
+            int mid = st + (end-st)/2;
+            if(isPossible(stalls,n,k,mid)){
+                ans = mid;
+                st = mid+1;
+            }else{
+                end = mid-1;
+            }
+        }
+        return ans;
+    }
